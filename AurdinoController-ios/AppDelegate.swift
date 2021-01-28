@@ -11,10 +11,41 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
+    var level = 0;
+    var window: UIWindow?
+    var lastActiveTime: Date?
+    let userDefault = UserDefaults.standard
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         return true
+    }
+    
+    func initials(window: UIWindow) {
+        let navigation = SSNavigationController.shared
+        self.window = window
+        
+        setLevel()
+        setRoot(navigation: navigation)
+        
+        self.window?.rootViewController = navigation
+        self.window?.makeKeyAndVisible()
+    }
+    
+    private func setLevel() {
+        if !SSUserManager.isLoggedIn {
+            self.level = 0
+        } else {
+            self.level = 1
+        }
+    }
+    
+    private func setRoot(navigation: SSNavigationController) {
+        switch self.level {
+        case 0:
+            navigation.setRootViewController(vc: navigation.findViewController(page: .mainList)) //TODO
+        default:
+            navigation.setRootViewController(vc: navigation.findViewController(page: .mainList))
+        }
     }
 
     // MARK: UISceneSession Lifecycle
@@ -30,7 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
 
 }
 
